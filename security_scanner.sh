@@ -112,8 +112,21 @@ find_world_writable() {
     #
     #     ((count++))
     # done < <(find "$TEST_DIR" -perm -002)
-
     # YOUR CODE HERE
+    while IFS= read -r item; do
+        # Get numeric permissions like 777, 666, etc.
+        perms=$(stat -c "%a" "$item")
+
+        # Check if it is a file or directory and print accordingly
+        if [ -f "$item" ]; then
+            echo "[FILE] $item ($perms)"
+        elif [ -d "$item" ]; then
+            echo "[DIR]  $item ($perms)"
+        fi
+
+        # Increment the counter
+        ((count++))
+    done < <(find "$TEST_DIR" -perm -002)
 
 
     echo ""
@@ -158,6 +171,16 @@ find_executable_non_scripts() {
     # done < <(find "$TEST_DIR" -type f \( -name "*.html" -o -name "*.css" -o -name "*.txt" -o -name "*.conf" \) -perm /111)
 
     # YOUR CODE HERE
+    while IFS= read -r file; do
+        # Get numeric permissions like 755, 777, etc.
+        perms=$(stat -c "%a" "$file")
+
+        # Print the executable non-script file
+        echo "[EXEC] $file ($perms)"
+
+        # Increment the counter
+        ((count++))
+    done < <(find "$TEST_DIR" -type f \( -name "*.html" -o -name "*.css" -o -name "*.txt" -o -name "*.conf" \) -perm /111)
 
 
     echo ""
